@@ -233,5 +233,5 @@ return [
         'Html' => Collective\Html\HtmlFacade::class,
         'Flash' => Laracasts\Flash\Flash::class,
     ],
-
+    InfyOm\GeneratorBuilder\GeneratorBuilderServiceProvider::class,
 ];
