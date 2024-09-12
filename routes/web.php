@@ -38,3 +38,6 @@ Route::post(
 )->name('io_generator_builder_generate_from_file');
 
 Route::resource('categories', App\Http\Controllers\CategoryController::class);
+
+
+Route::resource('products', App\Http\Controllers\ProductController::class);
