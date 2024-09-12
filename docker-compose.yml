@@ -33,6 +33,42 @@ services:
       retries: 3
       start_period: 10s
 
+  db:
+      image: postgres
+      container_name: amazing-store-db
+      restart: always
+      ports:
+          - ${PSQL_PORT:-5432}:5432
+      environment:
+          POSTGRES_USER: ${PG_DB_USER:-postgres}
+          POSTGRES_PASSWORD: ${PG_DB_PASSWORD:-postgres}
+          POSTGRES_DB: amazingstore
+      healthcheck:
+          test: [ "CMD-SHELL", "pg_isready -U postgres -d vice" ]
+          interval: 10s
+          retries: 5
+          start_period: 30s
+          timeout: 10s
+      volumes:
+          - amazingstore_local_pgdata:/var/lib/postgresql/data
+      extra_hosts:
+          - "host.docker.internal:host-gateway"
+      command: ["postgres", "-c", "log_statement=all"]
+
+  pgadmin:
+      image: dpage/pgadmin4
+      container_name: amazingstore_pgadmin4_container
+      restart: always
+      ports:
+          - ${PG_ADMIN_PORT:-8888}:80
+      environment:
+          PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:-postgres@postgres.com}
+          PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-non_postgres_pass}
+      volumes:
+          - amazingstore_pgadmin_data:/var/lib/pgadmin
+      extra_hosts:
+          - "host.docker.internal:host-gateway"
+
   nginx:
     image: nginx:alpine
     container_name: amazing-store-app-nginx
@@ -44,3 +80,7 @@ services:
       - ./docker-compose/nginx:/etc/nginx/conf.d/
     extra_hosts:
       - "host.docker.internal:host-gateway"
+      -
+volumes:
+    amazingstore_local_pgdata:
+    amazingstore_pgadmin_data:
