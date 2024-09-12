@@ -80,7 +80,7 @@ services:
       - ./docker-compose/nginx:/etc/nginx/conf.d/
     extra_hosts:
       - "host.docker.internal:host-gateway"
-      -
+
 volumes:
     amazingstore_local_pgdata:
     amazingstore_pgadmin_data:
